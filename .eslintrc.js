@@ -23,6 +23,9 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     semi: ['error', 'never'],
     'comma-dangle': ['error', 'never'],
-    'prettier/prettier': ['off']
+    'prettier/prettier': ['off'],
+    'eol-last': ['error', 'always'],
+    'no-multiple-empty-lines': ['error', {max: 1, maxEOF: 0}],
+    'no-trailing-spaces': 'error',
   }
 }

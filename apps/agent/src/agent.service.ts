@@ -6,4 +6,3 @@ export class AgentService {
     return 'Hello World!'
   }
 }
-
