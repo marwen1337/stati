@@ -1,7 +1,7 @@
 {
-  "name": "service",
+  "name": "stati",
   "version": "0.0.1",
-  "description": "",
+  "description": "An agent based status monitor\n\n",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
