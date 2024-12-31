@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AgentModule } from './agent/agent.module'
 import { MonitorModule } from './monitor/monitor.module'
 import { ResultModule } from './result/result.module'
+import { UtilityModule } from './utility/utility.module'
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ResultModule } from './result/result.module'
     ConfigModule,
     AgentModule,
     MonitorModule,
-    ResultModule
+    ResultModule,
+    UtilityModule
   ],
   controllers: [AppController],
   providers: [AppService]
