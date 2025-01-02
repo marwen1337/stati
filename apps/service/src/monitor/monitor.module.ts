@@ -7,6 +7,7 @@ import { MonitorEntity } from './model/monitor.entity'
 @Module({
   controllers: [MonitorController],
   providers: [MonitorService],
-  imports: [TypeOrmModule.forFeature([MonitorEntity])]
+  imports: [TypeOrmModule.forFeature([MonitorEntity])],
+  exports: [MonitorService]
 })
 export class MonitorModule {}

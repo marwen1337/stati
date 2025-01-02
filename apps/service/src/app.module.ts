@@ -7,6 +7,8 @@ import { AgentModule } from './agent/agent.module'
 import { MonitorModule } from './monitor/monitor.module'
 import { ResultModule } from './result/result.module'
 import { UtilityModule } from './utility/utility.module'
+import { MonitoringModule } from './monitoring/monitoring.module'
+import { ScheduleModule } from '@nestjs/schedule'
 
 @Module({
   imports: [
@@ -17,11 +19,13 @@ import { UtilityModule } from './utility/utility.module'
       autoLoadEntities: true,
       synchronize: true
     }),
+    ScheduleModule.forRoot(),
     ConfigModule,
     AgentModule,
     MonitorModule,
     ResultModule,
-    UtilityModule
+    UtilityModule,
+    MonitoringModule
   ],
   controllers: [AppController],
   providers: [AppService]

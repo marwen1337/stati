@@ -17,6 +17,9 @@ export class MonitorEntity {
   @Column()
   name: string
 
+  @Column()
+  intervalSeconds: number
+
   @Column({ type: 'simple-enum', enum: MonitorType })
   type: MonitorType
 
