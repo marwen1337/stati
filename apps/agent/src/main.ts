@@ -25,5 +25,9 @@ async function bootstrap() {
   socket.on('disconnect', (reason) => {
     logger.log(`Disconnected`, reason)
   })
+
+  socket.on('runMonitor', (content) => {
+    logger.log(`Running Monitor: ${content}`)
+  })
 }
 bootstrap()

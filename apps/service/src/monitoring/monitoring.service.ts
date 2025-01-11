@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { MonitorService } from '../monitor/monitor.service'
 import { MonitorEntity } from '../monitor/model/monitor.entity'
 import { SchedulerRegistry } from '@nestjs/schedule'
+import { AgentCommunicationService } from '../agent/agent-communication.service'
 
 @Injectable()
 export class MonitoringService {
@@ -9,6 +10,7 @@ export class MonitoringService {
   constructor(
     private monitorService: MonitorService,
     private schedulerRegistry: SchedulerRegistry,
+    private communicationService: AgentCommunicationService,
   ) {
     this.logger.log('Loading all existing monitors')
     this.loadAllMonitors().then((amount) =>
@@ -19,6 +21,7 @@ export class MonitoringService {
   loadMonitor(monitor: MonitorEntity) {
     const callback = () => {
       this.logger.debug(`Running ${this.getCronjobName(monitor)}`)
+      this.communicationService.sendMessage(monitor.agent, monitor.id)
     }
     const interval = setInterval(callback, monitor.intervalSeconds * 1000)
     this.schedulerRegistry.addInterval(this.getCronjobName(monitor), interval)

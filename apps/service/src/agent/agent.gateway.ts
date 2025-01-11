@@ -51,4 +51,19 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
     )
     this.connectedAgents.delete(id)
   }
+
+  sendMessage(agentId: string, type: string, content: string) {
+    if (!this.isConnected(agentId)) {
+      this.logger.warn(
+        `Trying to send message: Agent ${agentId} is not connected`,
+      )
+      return
+    }
+    const agent = this.connectedAgents.get(agentId)
+    agent.emit(type, content)
+  }
+
+  isConnected(agentId: string): boolean {
+    return this.connectedAgents.has(agentId)
+  }
 }
