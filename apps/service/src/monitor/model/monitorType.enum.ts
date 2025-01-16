@@ -1,3 +1,4 @@
 export enum MonitorType {
-  HTTP = 'HTTP'
+  HTTP = 'HTTP',
+  CPU = 'CPU'
 }
