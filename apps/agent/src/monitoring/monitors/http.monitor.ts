@@ -12,7 +12,7 @@ export class HttpMonitor implements BaseMonitor<HttpMonitorIn> {
     const responseTime = Date.now() - start
 
     return {
-      status: response.ok ? MonitorStatus.OK : MonitorStatus.ERROR,
+      status: response.ok ? MonitorStatus.UP : MonitorStatus.DOWN,
       metric: {
         primary: responseTime
       }

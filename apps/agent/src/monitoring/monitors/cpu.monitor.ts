@@ -10,10 +10,10 @@ export class CpuMonitor implements BaseMonitor<CpuMonitorIn> {
   run(input: CpuMonitorIn) {
     const oneMinuteCpuUsage = loadavg()[0]
 
-    let status = MonitorStatus.OK
+    let status = MonitorStatus.UP
 
     if (oneMinuteCpuUsage >= input.maxUsageThreshold) {
-      status = MonitorStatus.ERROR
+      status = MonitorStatus.DOWN
     }
 
     return {

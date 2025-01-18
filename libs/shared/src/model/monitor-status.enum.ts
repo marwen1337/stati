@@ -1,4 +1,4 @@
 export enum MonitorStatus {
-  OK = 'OK',
-  ERROR = 'ERROR'
+  UP = 'UP',
+  DOWN = 'DOWN'
 }

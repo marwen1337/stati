@@ -5,6 +5,7 @@ import { SchedulerRegistry } from '@nestjs/schedule'
 import { AgentCommunicationService } from '../agent/agent-communication.service'
 import { ResultService } from '../result/result.service'
 import { MonitorResult } from '@app/shared/model/monitor-result.type'
+import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 
 @Injectable()
 export class MonitoringService {
@@ -40,7 +41,12 @@ export class MonitoringService {
     )) as { monitorId: string; data: MonitorResult }
 
     if (!response) {
-      this.logger.error(`No monitor result received from ${monitor.id}`)
+      this.logger.debug(`No monitor result received from ${monitor.id}`)
+
+      await this.resultService.storeResult(monitor, MonitorStatus.DOWN, {
+        primary: 0
+      })
+
       return
     }
 

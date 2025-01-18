@@ -6,6 +6,7 @@ import { MonitorEntity } from '../monitor/model/monitor.entity'
 import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 import { Cron } from '@nestjs/schedule'
 import { ResultConfigService } from './result-config.service'
+import { MonitorResult } from '@app/shared/model/monitor-result.type'
 
 @Injectable()
 export class ResultService {
@@ -16,10 +17,29 @@ export class ResultService {
     private resultConfig: ResultConfigService,
   ) {}
 
+  async findLastResultFor(monitorId: string) {
+    const lastResult = await this.resultRepository.findOne({
+      where: {
+        monitor: {
+          id: monitorId
+        }
+      },
+      order: {
+        createdAt: 'DESC'
+      }
+    })
+
+    if (!lastResult) {
+      return ResultEntity.getEmpty()
+    }
+
+    return lastResult
+  }
+
   async storeResult(
     monitor: MonitorEntity,
     status: MonitorStatus,
-    metrics: object,
+    metrics: MonitorResult['metric'],
   ) {
     const result = this.resultRepository.create({
       monitor,

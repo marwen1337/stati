@@ -7,6 +7,7 @@ import {
 } from 'typeorm'
 import { MonitorEntity } from '../../monitor/model/monitor.entity'
 import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
+import { randomUUID } from 'node:crypto'
 
 @Entity('result')
 export class ResultEntity {
@@ -24,4 +25,12 @@ export class ResultEntity {
 
   @CreateDateColumn()
   createdAt: Date
+
+  static getEmpty() {
+    const result = new ResultEntity()
+    result.id = randomUUID().toString()
+    result.status = MonitorStatus.DOWN
+    result.createdAt = new Date()
+    return result
+  }
 }

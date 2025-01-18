@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MonitorEntity } from './model/monitor.entity'
-import { FindManyOptions, Repository } from 'typeorm'
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 
 @Injectable()
 export class MonitorService {
@@ -12,5 +12,9 @@ export class MonitorService {
 
   findAll(options?: FindManyOptions<MonitorEntity>) {
     return this.repository.find(options)
+  }
+
+  findOne(options: FindOneOptions<MonitorEntity>) {
+    return this.repository.findOne(options)
   }
 }
