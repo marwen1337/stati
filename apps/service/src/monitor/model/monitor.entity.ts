@@ -37,4 +37,8 @@ export class MonitorEntity {
 
   @Column()
   updatedAt: Date
+
+  toString() {
+    return `${this.name} (${this.id})`
+  }
 }

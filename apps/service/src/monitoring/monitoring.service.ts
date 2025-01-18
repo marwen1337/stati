@@ -25,7 +25,7 @@ export class MonitoringService {
     const callback = () => this.runMonitor(monitor)
     const interval = setInterval(callback, monitor.intervalSeconds * 1000)
     this.schedulerRegistry.addInterval(this.getCronjobName(monitor), interval)
-    this.logger.debug(`Added monitor ${monitor.name} (${monitor.id})`)
+    this.logger.debug(`Added monitor ${monitor}`)
   }
 
   async runMonitor(monitor: MonitorEntity) {

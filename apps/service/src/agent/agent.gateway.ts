@@ -22,7 +22,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(client: Socket) {
     if (!client.handshake.auth.accessKey) {
       this.logger.log(
-        'New connection from ${client.conn.remoteAddress} closed: no accessKey provided',
+        `New connection from ${client.conn.remoteAddress} closed: no accessKey provided`,
       )
       client.disconnect()
       return
@@ -38,7 +38,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return null
     }
     this.logger.log(
-      `Agent ${agentEntity.id} from ${client.conn.remoteAddress} authenticated`,
+      `Agent ${agentEntity} from ${client.conn.remoteAddress} authenticated`,
     )
     this.connectedAgents.set(agentEntity.id, client)
   }

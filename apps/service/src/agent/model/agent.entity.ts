@@ -23,4 +23,8 @@ export class AgentEntity {
 
   @Column()
   updatedAt: Date
+
+  toString() {
+    return `${this.name} (${this.id})`
+  }
 }
