@@ -17,7 +17,9 @@ export class CpuMonitor implements BaseMonitor<CpuMonitorIn> {
 
     return {
       status,
-      metric: oneMinuteCpuUsage
+      metric: {
+        primary: oneMinuteCpuUsage
+      }
     }
   }
 }

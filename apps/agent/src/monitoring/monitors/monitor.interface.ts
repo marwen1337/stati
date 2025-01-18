@@ -1,14 +1,16 @@
 
 export enum MonitorStatus {
-  OK = 'ok',
-  ERROR = 'error'
+  OK = 'OK',
+  ERROR = 'ERROR'
 }
 
 export type BaseMonitorIn = object
 
 export type BaseMonitorOut = {
   status: MonitorStatus,
-  metric: number
+  metric: {
+    primary: number
+  }
 }
 
 export interface BaseMonitor<V extends BaseMonitorIn = BaseMonitorIn, T extends BaseMonitorOut = BaseMonitorOut> {

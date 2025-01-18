@@ -3,6 +3,8 @@ import { MonitorService } from '../monitor/monitor.service'
 import { MonitorEntity } from '../monitor/model/monitor.entity'
 import { SchedulerRegistry } from '@nestjs/schedule'
 import { AgentCommunicationService } from '../agent/agent-communication.service'
+import { BaseMonitorOut } from '../../../agent/src/monitoring/monitors/monitor.interface'
+import { ResultService } from '../result/result.service'
 
 @Injectable()
 export class MonitoringService {
@@ -11,6 +13,7 @@ export class MonitoringService {
     private monitorService: MonitorService,
     private schedulerRegistry: SchedulerRegistry,
     private communicationService: AgentCommunicationService,
+    private resultService: ResultService,
   ) {
     this.logger.log('Loading all existing monitors')
     this.loadAllMonitors().then((amount) =>
@@ -19,13 +22,28 @@ export class MonitoringService {
   }
 
   loadMonitor(monitor: MonitorEntity) {
-    const callback = () => {
-      this.logger.debug(`Running ${this.getCronjobName(monitor)}`)
-      this.communicationService.sendMessage(monitor.agent, monitor.id)
-    }
+    const callback = () => this.runMonitor(monitor)
     const interval = setInterval(callback, monitor.intervalSeconds * 1000)
     this.schedulerRegistry.addInterval(this.getCronjobName(monitor), interval)
     this.logger.debug(`Added monitor ${monitor.name} (${monitor.id})`)
+  }
+
+  async runMonitor(monitor: MonitorEntity) {
+    this.logger.debug(`Running ${this.getCronjobName(monitor)}`)
+    const response = (await this.communicationService.requestMonitorResult(
+      monitor.agent,
+      {
+        monitorId: monitor.id,
+        monitorType: monitor.type,
+        data: monitor.configuration
+      },
+    )) as { monitorId: string; data: BaseMonitorOut }
+
+    this.resultService.storeResult(
+      monitor,
+      response.data.status,
+      response.data.metric,
+    )
   }
 
   getCronjobName(monitor: MonitorEntity) {

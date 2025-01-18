@@ -12,7 +12,9 @@ export class HttpMonitor implements BaseMonitor<HttpMonitorIn> {
 
     return {
       status: response.ok ? MonitorStatus.OK : MonitorStatus.ERROR,
-      metric: responseTime
+      metric: {
+        primary: responseTime
+      }
     }
   }
 }

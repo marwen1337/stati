@@ -1,27 +1,27 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { ResultStatus } from './resultStatus.enum'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm'
 import { MonitorEntity } from '../../monitor/model/monitor.entity'
+import { MonitorStatus } from '../../../../agent/src/monitoring/monitors/monitor.interface'
 
 @Entity('result')
 export class ResultEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
-  name: string
-
-  @Column({ type: 'simple-enum', enum: ResultStatus })
-  status: ResultStatus
-
-  @Column({ type: 'simple-json' })
-  result: object
-
   @ManyToOne(() => MonitorEntity, (monitor) => monitor.results)
   monitor: MonitorEntity
 
-  @Column()
-  createdAt: Date
+  @Column({ type: 'simple-enum', enum: MonitorStatus })
+  status: MonitorStatus
 
-  @Column()
-  updatedAt: Date
+  @Column({ type: 'simple-json' })
+  metrics: object
+
+  @CreateDateColumn()
+  createdAt: Date
 }

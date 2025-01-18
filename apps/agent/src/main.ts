@@ -3,11 +3,13 @@ import { AgentModule } from './agent.module'
 import { io } from 'socket.io-client'
 import { AgentConfigService } from './agent-config.service'
 import { Logger } from '@nestjs/common'
+import { MonitoringService } from './monitoring/monitoring.service'
 
 async function bootstrap() {
   const logger = new Logger('main')
   const app = await NestFactory.createApplicationContext(AgentModule)
   const config = app.get(AgentConfigService)
+  const monitoringService = app.get(MonitoringService)
 
   const socket = io(
     `ws://${config.get('server.host')}:${config.get('server.port')}`,
@@ -26,8 +28,17 @@ async function bootstrap() {
     logger.log(`Disconnected`, reason)
   })
 
-  socket.on('runMonitor', (content) => {
-    logger.log(`Running Monitor: ${content}`)
+  socket.on('runMonitor', async (content, callback) => {
+    logger.log(`Running Monitor: ${content.monitorId!}`)
+    const result = await monitoringService.runMonitor(
+      content.monitorType!,
+      content.data!,
+    )
+    logger.log(`Sending result to server for Monitor ${content.monitorId!}`)
+    callback({
+      monitorId: content.monitorId,
+      data: result
+    })
   })
 }
 bootstrap()

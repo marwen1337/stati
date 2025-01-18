@@ -52,7 +52,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.connectedAgents.delete(id)
   }
 
-  sendMessage(agentId: string, type: string, content: string) {
+  sendMessage(agentId: string, type: string, content: object) {
     if (!this.isConnected(agentId)) {
       this.logger.warn(
         `Trying to send message: Agent ${agentId} is not connected`,
@@ -61,6 +61,25 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     const agent = this.connectedAgents.get(agentId)
     agent.emit(type, content)
+  }
+
+  sendMessageWithAck<T = any>(
+    agentId: string,
+    type: string,
+    content: object,
+  ): Promise<T> | null {
+    if (!this.isConnected(agentId)) {
+      this.logger.warn(
+        `Trying to send message: Agent ${agentId} is not connected`,
+      )
+      return null
+    }
+    const agent = this.connectedAgents.get(agentId)
+    try {
+      return agent.emitWithAck(type, content) as Promise<T>
+    } catch (error) {
+      return null
+    }
   }
 
   isConnected(agentId: string): boolean {
