@@ -4,6 +4,7 @@ import { io } from 'socket.io-client'
 import { AgentConfigService } from './agent-config.service'
 import { Logger } from '@nestjs/common'
 import { MonitoringService } from './monitoring/monitoring.service'
+import { MessageType } from '@app/shared/model/message-type.enum'
 
 async function bootstrap() {
   const logger = new Logger('main')
@@ -28,7 +29,7 @@ async function bootstrap() {
     logger.log(`Disconnected`, reason)
   })
 
-  socket.on('runMonitor', async (content, callback) => {
+  socket.on(MessageType.RUN_MONITOR, async (content, callback) => {
     logger.log(`Running Monitor: ${content.monitorId!}`)
     const result = await monitoringService.runMonitor(
       content.monitorType!,

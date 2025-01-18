@@ -1,5 +1,6 @@
-import { BaseMonitor, MonitorStatus } from './monitor.interface'
+import { BaseMonitor } from './monitor.interface'
 import { loadavg } from 'node:os'
+import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 
 type CpuMonitorIn = {
   maxUsageThreshold: number;

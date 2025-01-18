@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ResultEntity } from './model/result.entity'
 import { Repository } from 'typeorm'
-import { MonitorStatus } from '../../../agent/src/monitoring/monitors/monitor.interface'
 import { MonitorEntity } from '../monitor/model/monitor.entity'
+import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 
 @Injectable()
 export class ResultService {

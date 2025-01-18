@@ -1,18 +1,9 @@
+import { MonitorConfiguration } from '@app/shared/model/monitor-configuration.type'
+import { MonitorResult } from '@app/shared/model/monitor-result.type'
 
-export enum MonitorStatus {
-  OK = 'OK',
-  ERROR = 'ERROR'
-}
-
-export type BaseMonitorIn = object
-
-export type BaseMonitorOut = {
-  status: MonitorStatus,
-  metric: {
-    primary: number
-  }
-}
-
-export interface BaseMonitor<V extends BaseMonitorIn = BaseMonitorIn, T extends BaseMonitorOut = BaseMonitorOut> {
+export interface BaseMonitor<
+  V extends MonitorConfiguration = MonitorConfiguration,
+  T extends MonitorResult = MonitorResult,
+> {
   run(input: V): T | Promise<T>;
 }

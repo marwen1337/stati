@@ -3,8 +3,8 @@ import { MonitorService } from '../monitor/monitor.service'
 import { MonitorEntity } from '../monitor/model/monitor.entity'
 import { SchedulerRegistry } from '@nestjs/schedule'
 import { AgentCommunicationService } from '../agent/agent-communication.service'
-import { BaseMonitorOut } from '../../../agent/src/monitoring/monitors/monitor.interface'
 import { ResultService } from '../result/result.service'
+import { MonitorResult } from '@app/shared/model/monitor-result.type'
 
 @Injectable()
 export class MonitoringService {
@@ -37,9 +37,14 @@ export class MonitoringService {
         monitorType: monitor.type,
         data: monitor.configuration
       },
-    )) as { monitorId: string; data: BaseMonitorOut }
+    )) as { monitorId: string; data: MonitorResult }
 
-    this.resultService.storeResult(
+    if (!response) {
+      this.logger.error(`No monitor result received from ${monitor.id}`)
+      return
+    }
+
+    await this.resultService.storeResult(
       monitor,
       response.data.status,
       response.data.metric,

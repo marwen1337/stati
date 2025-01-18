@@ -1,4 +1,5 @@
-import { BaseMonitor, MonitorStatus } from './monitor.interface'
+import { BaseMonitor } from './monitor.interface'
+import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 
 type HttpMonitorIn = {
   url: string;

@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { MonitorEntity } from '../../monitor/model/monitor.entity'
-import { MonitorStatus } from '../../../../agent/src/monitoring/monitors/monitor.interface'
+import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 
 @Entity('result')
 export class ResultEntity {

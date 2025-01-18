@@ -7,6 +7,7 @@ import {
 import { Server, Socket } from 'socket.io'
 import { AgentService } from './agent.service'
 import { Logger } from '@nestjs/common'
+import { MessageType } from '@app/shared/model/message-type.enum'
 
 @WebSocketGateway()
 export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -52,7 +53,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.connectedAgents.delete(id)
   }
 
-  sendMessage(agentId: string, type: string, content: object) {
+  sendMessage(agentId: string, type: MessageType, content: object) {
     if (!this.isConnected(agentId)) {
       this.logger.warn(
         `Trying to send message: Agent ${agentId} is not connected`,
@@ -65,7 +66,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   sendMessageWithAck<T = any>(
     agentId: string,
-    type: string,
+    type: MessageType,
     content: object,
   ): Promise<T> | null {
     if (!this.isConnected(agentId)) {
