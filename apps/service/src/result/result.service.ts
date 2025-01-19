@@ -68,7 +68,7 @@ export class ResultService {
     this.logger.log('Cleaning up results...')
 
     const minimalDate = new Date(
-      Date.now() - this.resultConfig.get('keepFor') * 1000,
+      Date.now() - this.resultConfig.get('keepForSeconds') * 1000,
     )
 
     const deleteResult = await this.resultRepository.delete({

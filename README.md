@@ -26,30 +26,28 @@ flowchart TB
 ```mermaid
 erDiagram
     Agent {
-        INT Id
+        STRING Id
         STRING Name
-        STRING AccessKey
-        STRING Status
-        DATETIME LastSeen
+        STRING HashedAccessKey
         DATETIME CreatedAt
         DATETIME UpdatedAt
     }
     Monitor {
-        INT Id
+        STRING Id
         STRING Name
         ENUM Type
-        JSON MonitorData
-        INT AgentId
+        JSON Configuration
+        STRING AgentId
         DATETIME CreatedAt
         DATETIME UpdatedAt
+        INT IntervalSeconds
     }
     Result {
-        INT Id
-        INT MonitorId
-        STRING Status
-        JSON ResultData
+        STRING Id
+        STRING MonitorId
+        ENUM Status
+        JSON Metrics
         DATETIME CreatedAt
-        DATETIME UpdatedAt
     }
 
     Agent ||--o{ Monitor : has

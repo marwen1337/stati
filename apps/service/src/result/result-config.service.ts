@@ -1,7 +1,7 @@
 import { ConfigService } from '@app/config'
 
 const defaultResultConfig = {
-  keepFor: 86400 * 30
+  keepForSeconds: 86400 * 30
 }
 
 export class ResultConfigService extends ConfigService<

@@ -19,9 +19,6 @@ export class AgentEntity {
   @Column()
   hashedAccessKey: string
 
-  @Column()
-  lastSeen: Date
-
   @OneToMany(() => MonitorEntity, (monitor) => monitor.agent)
   monitors: MonitorEntity[]
 

@@ -11,6 +11,10 @@ export class AgentService {
     private hashService: HashService,
   ) {}
 
+  findAgentById(id: string): Promise<AgentEntity> | null {
+    return this.repository.findOneBy({ id })
+  }
+
   async findByAccessKey(accessKey: string) {
     const hashedAccessKey = this.hashService.defaultHash(accessKey)
     return await this.repository.findOneBy({
