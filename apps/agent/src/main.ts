@@ -12,21 +12,20 @@ async function bootstrap() {
   const config = app.get(AgentConfigService)
   const monitoringService = app.get(MonitoringService)
 
-  const socket = io(
-    `ws://${config.get('server.host')}:${config.get('server.port')}`,
-    {
-      auth: { accessKey: config.get('accesskey') }
-    },
-  )
+  const server = `${config.get('server.host')}:${config.get('server.port')}`
+
+  const socket = io(`ws://${server}`, {
+    auth: { accessKey: config.get('accesskey') }
+  })
 
   socket.on('connect', () => {
-    logger.log(`Connected`)
+    logger.log(`Connected to ${server}`)
   })
   socket.on('connect_error', (err) => {
     logger.log(`Error connecting`, err)
   })
   socket.on('disconnect', (reason) => {
-    logger.log(`Disconnected`, reason)
+    logger.log(`Disconnected from ${server}`, reason)
   })
 
   socket.on(MessageType.RUN_MONITOR, async (content, callback) => {

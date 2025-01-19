@@ -59,7 +59,7 @@ export class ResultService {
       status,
       metrics
     })
-    await this.resultRepository.save(result)
+    return this.resultRepository.save(result)
   }
 
   // Every 10 minutes

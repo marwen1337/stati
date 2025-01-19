@@ -9,6 +9,7 @@ import { ResultModule } from './result/result.module'
 import { UtilityModule } from './utility/utility.module'
 import { MonitoringModule } from './monitoring/monitoring.module'
 import { ScheduleModule } from '@nestjs/schedule'
+import { NotificationModule } from './notification/notification.module'
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { ScheduleModule } from '@nestjs/schedule'
     MonitorModule,
     ResultModule,
     UtilityModule,
-    MonitoringModule
+    MonitoringModule,
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [AppService]

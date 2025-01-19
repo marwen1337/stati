@@ -6,6 +6,8 @@ import { AgentCommunicationService } from '../agent/agent-communication.service'
 import { ResultService } from '../result/result.service'
 import { MonitorResult } from '@app/shared/model/monitor-result.type'
 import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
+import { ResultEntity } from '../result/model/result.entity'
+import { NotificationService } from '../notification/notification.service'
 
 @Injectable()
 export class MonitoringService {
@@ -15,6 +17,7 @@ export class MonitoringService {
     private schedulerRegistry: SchedulerRegistry,
     private communicationService: AgentCommunicationService,
     private resultService: ResultService,
+    private notificationService: NotificationService,
   ) {
     this.logger.log('Loading all existing monitors')
     this.loadAllMonitors().then((amount) =>
@@ -40,21 +43,32 @@ export class MonitoringService {
       },
     )) as { monitorId: string; data: MonitorResult }
 
-    if (!response) {
+    const oldResult = await this.resultService.findLastResultFor(monitor.id)
+    let newResult: ResultEntity
+
+    if (response) {
+      newResult = await this.resultService.storeResult(
+        monitor,
+        response.data.status,
+        response.data.metric,
+      )
+    } else {
       this.logger.debug(`No monitor result received from ${monitor.id}`)
-
-      await this.resultService.storeResult(monitor, MonitorStatus.DOWN, {
-        primary: 0
-      })
-
-      return
+      newResult = await this.resultService.storeResult(
+        monitor,
+        MonitorStatus.DOWN,
+        {
+          primary: 0
+        },
+      )
     }
 
-    await this.resultService.storeResult(
-      monitor,
-      response.data.status,
-      response.data.metric,
-    )
+    if (oldResult.status !== newResult.status) {
+      this.notificationService.sendStatusNotification(
+        monitor,
+        newResult.status,
+      )
+    }
   }
 
   getCronjobName(monitor: MonitorEntity) {
