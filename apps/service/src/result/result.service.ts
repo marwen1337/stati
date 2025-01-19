@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ResultEntity } from './model/result.entity'
-import { LessThanOrEqual, Repository } from 'typeorm'
+import { And, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
 import { MonitorEntity } from '../monitor/model/monitor.entity'
 import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 import { Cron } from '@nestjs/schedule'
@@ -34,6 +34,19 @@ export class ResultService {
     }
 
     return lastResult
+  }
+
+  async findForMonitor(
+    monitorId: string,
+    fromDate: Date = new Date(Date.now() - 3600 * 1000),
+    toDate: Date = new Date(),
+  ) {
+    return this.resultRepository.findBy({
+      monitor: {
+        id: monitorId
+      },
+      createdAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate))
+    })
   }
 
   async storeResult(

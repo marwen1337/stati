@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 import { MonitorEntity } from '../../monitor/model/monitor.entity'
 
 @Entity('agent')
@@ -18,10 +25,10 @@ export class AgentEntity {
   @OneToMany(() => MonitorEntity, (monitor) => monitor.agent)
   monitors: MonitorEntity[]
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date
 
   toString() {

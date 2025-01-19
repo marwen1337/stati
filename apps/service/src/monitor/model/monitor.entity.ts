@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm'
 import { MonitorType } from './monitorType.enum'
 import { AgentEntity } from '../../agent/model/agent.entity'
@@ -32,10 +34,10 @@ export class MonitorEntity {
   @OneToMany(() => ResultEntity, (result) => result.monitor)
   results: ResultEntity[]
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date
 
   toString() {

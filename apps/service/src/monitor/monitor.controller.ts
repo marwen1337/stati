@@ -24,4 +24,14 @@ export class MonitorController {
       status: lastResult.status
     }
   }
+
+  @Get(':id/metrics')
+  async getMonitorMetrics(@Param('id') id: string) {
+    const results = await this.resultService.findForMonitor(id)
+    return results.map((r) => ({
+      timestamp: r.createdAt,
+      status: r.status,
+      metrics: r.metrics
+    }))
+  }
 }
