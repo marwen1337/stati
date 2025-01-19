@@ -3,6 +3,7 @@ import { Repository } from 'typeorm'
 import { AgentEntity } from './model/agent.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { HashService } from '../utility/hash.service'
+import { CreateAgentDto } from './dto/create-agent.dto'
 
 @Injectable()
 export class AgentService {
@@ -11,7 +12,11 @@ export class AgentService {
     private hashService: HashService,
   ) {}
 
-  findAgentById(id: string): Promise<AgentEntity> | null {
+  findAll() {
+    return this.repository.find()
+  }
+
+  findById(id: string): Promise<AgentEntity> | null {
     return this.repository.findOneBy({ id })
   }
 
@@ -20,5 +25,36 @@ export class AgentService {
     return await this.repository.findOneBy({
       hashedAccessKey: hashedAccessKey
     })
+  }
+
+  async create(
+    data: CreateAgentDto,
+  ): Promise<AgentEntity & { accessKey: string }> {
+    const agentEntity = this.repository.create(data)
+    const accessKey = this.generateRandomString(32)
+    agentEntity.hashedAccessKey = this.hashService.defaultHash(accessKey)
+
+    const agentEntitySaved = await this.repository.save(agentEntity)
+    return {
+      ...agentEntitySaved,
+      accessKey
+    }
+  }
+
+  deleteAgent(agent: AgentEntity) {
+    return this.repository.remove(agent)
+  }
+
+  private generateRandomString(length: number): string {
+    const characters =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let result = ''
+    const charactersLength = characters.length
+
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+
+    return result
   }
 }
