@@ -2,11 +2,17 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@app/config/config.service'
 
 interface SharedConfig {
-  port: number
+  port: number;
+  cors: {
+    origin: string;
+  };
 }
 
 const initialSharedConfig = {
-  port: 8080
+  port: 8080,
+  cors: {
+    origin: '*'
+  }
 }
 
 @Injectable()
