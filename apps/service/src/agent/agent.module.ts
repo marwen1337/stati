@@ -11,6 +11,6 @@ import { AgentCommunicationService } from './agent-communication.service'
   imports: [TypeOrmModule.forFeature([AgentEntity]), UtilityModule],
   providers: [AgentService, AgentGateway, AgentCommunicationService],
   controllers: [AgentController],
-  exports: [AgentCommunicationService]
+  exports: [AgentCommunicationService, AgentService]
 })
 export class AgentModule {}

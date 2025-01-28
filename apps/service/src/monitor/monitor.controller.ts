@@ -1,13 +1,16 @@
-import { Controller, Get, Param, Query } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { MonitorService } from './monitor.service'
 import { ResultService } from '../result/result.service'
 import { MonitorEntity } from './model/monitor.entity'
+import { CreateMonitorDto } from './dto/create-monitor.dto'
+import { MonitoringService } from '../monitoring/monitoring.service'
 
 @Controller('monitor')
 export class MonitorController {
   constructor(
     private monitorService: MonitorService,
-    private resultService: ResultService
+    private resultService: ResultService,
+    private monitoringService: MonitoringService
   ) {}
 
   @Get()
@@ -43,6 +46,15 @@ export class MonitorController {
       status: r.status,
       metrics: r.metrics
     }))
+  }
+
+  @Post()
+  async createMonitor(@Body() dto: CreateMonitorDto) {
+    const monitor = await this.monitorService.create(dto)
+
+    this.monitoringService.loadMonitor(monitor)
+
+    return monitor
   }
 
   async mapToMonitorWithStatus(monitor: MonitorEntity) {
