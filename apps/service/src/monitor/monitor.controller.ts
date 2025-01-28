@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Controller, Get, Param, Query } from '@nestjs/common'
 import { MonitorService } from './monitor.service'
 import { ResultService } from '../result/result.service'
 import { MonitorEntity } from './model/monitor.entity'
@@ -31,8 +31,13 @@ export class MonitorController {
   }
 
   @Get(':id/metrics')
-  async getMonitorMetrics(@Param('id') id: string) {
-    const results = await this.resultService.findForMonitor(id)
+  async getMonitorMetrics(
+    @Param('id') id: string,
+    @Query('limit') limit: number = 100
+  ) {
+    const results = await this.resultService.findForMonitor(id, {
+      take: limit
+    })
     return results.map((r) => ({
       timestamp: r.createdAt,
       status: r.status,

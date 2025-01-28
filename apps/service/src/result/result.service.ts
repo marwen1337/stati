@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ResultEntity } from './model/result.entity'
-import { And, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
+import {
+  And,
+  FindManyOptions,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository
+} from 'typeorm'
 import { MonitorEntity } from '../monitor/model/monitor.entity'
 import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 import { Cron } from '@nestjs/schedule'
@@ -14,7 +20,7 @@ export class ResultService {
   constructor(
     @InjectRepository(ResultEntity)
     private resultRepository: Repository<ResultEntity>,
-    private resultConfig: ResultConfigService,
+    private resultConfig: ResultConfigService
   ) {}
 
   async findLastResultFor(monitorId: string) {
@@ -38,21 +44,28 @@ export class ResultService {
 
   async findForMonitor(
     monitorId: string,
+    options?: FindManyOptions<ResultEntity>,
     fromDate: Date = new Date(Date.now() - 3600 * 1000),
-    toDate: Date = new Date(),
+    toDate: Date = new Date()
   ) {
-    return this.resultRepository.findBy({
-      monitor: {
-        id: monitorId
+    return this.resultRepository.find({
+      where: {
+        monitor: {
+          id: monitorId
+        },
+        createdAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate))
       },
-      createdAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate))
+      order: {
+        createdAt: 'DESC'
+      },
+      ...options
     })
   }
 
   async storeResult(
     monitor: MonitorEntity,
     status: MonitorStatus,
-    metrics: MonitorResult['metric'],
+    metrics: MonitorResult['metric']
   ) {
     const result = this.resultRepository.create({
       monitor,
@@ -68,7 +81,7 @@ export class ResultService {
     this.logger.log('Cleaning up results...')
 
     const minimalDate = new Date(
-      Date.now() - this.resultConfig.get('keepForSeconds') * 1000,
+      Date.now() - this.resultConfig.get('keepForSeconds') * 1000
     )
 
     const deleteResult = await this.resultRepository.delete({
