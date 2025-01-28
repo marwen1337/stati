@@ -83,7 +83,7 @@ export class MonitoringService {
     })
     if (!monitors.length) {
       this.logger.log('No monitors found during loading.')
-      return
+      return 0
     }
     for (const monitor of monitors) {
       this.loadMonitor(monitor)

@@ -15,7 +15,7 @@ import { NotificationModule } from './notification/notification.module'
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'database.sqlite',
+      database: './data/database.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       autoLoadEntities: true,
       synchronize: true
