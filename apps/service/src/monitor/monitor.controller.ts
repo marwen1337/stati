@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query
+} from '@nestjs/common'
 import { MonitorService } from './monitor.service'
 import { ResultService } from '../result/result.service'
 import { MonitorEntity } from './model/monitor.entity'
@@ -57,8 +65,19 @@ export class MonitorController {
     return monitor
   }
 
+  @Delete(':id')
+  async deleteMonitor(@Param('id') id: string) {
+    const monitor = await this.monitorService.delete(id)
+    monitor.id = id
+    if (monitor) {
+      this.monitoringService.unloadMonitor(monitor)
+    }
+    return monitor
+  }
+
   async mapToMonitorWithStatus(monitor: MonitorEntity) {
     const lastResult = await this.resultService.findLastResultFor(monitor.id)
+
     return {
       ...monitor,
       status: lastResult.status

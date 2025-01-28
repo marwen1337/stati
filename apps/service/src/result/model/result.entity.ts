@@ -14,7 +14,9 @@ export class ResultEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @ManyToOne(() => MonitorEntity, (monitor) => monitor.results)
+  @ManyToOne(() => MonitorEntity, (monitor) => monitor.results, {
+    onDelete: 'CASCADE'
+  })
   monitor: MonitorEntity
 
   @Column({ type: 'simple-enum', enum: MonitorStatus })

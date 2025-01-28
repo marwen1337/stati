@@ -17,11 +17,11 @@ export class MonitoringService {
     private schedulerRegistry: SchedulerRegistry,
     private communicationService: AgentCommunicationService,
     private resultService: ResultService,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     this.logger.log('Loading all existing monitors')
     this.loadAllMonitors().then((amount) =>
-      this.logger.log(`Done loading all existing monitors (${amount})`),
+      this.logger.log(`Done loading all existing monitors (${amount})`)
     )
   }
 
@@ -32,6 +32,15 @@ export class MonitoringService {
     this.logger.debug(`Added monitor ${monitor}`)
   }
 
+  unloadMonitor(monitor: MonitorEntity) {
+    if (
+      this.schedulerRegistry.doesExist('interval', this.getCronjobName(monitor))
+    ) {
+      this.schedulerRegistry.deleteInterval(this.getCronjobName(monitor))
+      this.logger.debug(`Removed monitor ${monitor}`)
+    }
+  }
+
   async runMonitor(monitor: MonitorEntity) {
     this.logger.debug(`Running ${this.getCronjobName(monitor)}`)
     const response = (await this.communicationService.requestMonitorResult(
@@ -40,7 +49,7 @@ export class MonitoringService {
         monitorId: monitor.id,
         monitorType: monitor.type,
         data: monitor.configuration
-      },
+      }
     )) as { monitorId: string; data: MonitorResult }
 
     const oldResult = await this.resultService.findLastResultFor(monitor.id)
@@ -50,7 +59,7 @@ export class MonitoringService {
       newResult = await this.resultService.storeResult(
         monitor,
         response.data.status,
-        response.data.metric,
+        response.data.metric
       )
     } else {
       this.logger.debug(`No monitor result received from ${monitor.id}`)
@@ -59,14 +68,14 @@ export class MonitoringService {
         MonitorStatus.DOWN,
         {
           primary: 0
-        },
+        }
       )
     }
 
     if (oldResult.status !== newResult.status) {
       this.notificationService.sendStatusNotification(
         monitor,
-        newResult.status,
+        newResult.status
       )
     }
   }

@@ -38,4 +38,14 @@ export class MonitorService {
 
     return this.repository.save(monitor)
   }
+
+  async delete(monitorId: string) {
+    const monitor = await this.findOne({ where: { id: monitorId } })
+
+    if (!monitor) {
+      throw new NotFoundException(`Monitor ${monitorId} not found`)
+    }
+
+    return this.repository.remove(monitor)
+  }
 }
