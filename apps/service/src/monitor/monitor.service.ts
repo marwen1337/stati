@@ -7,7 +7,7 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 export class MonitorService {
   constructor(
     @InjectRepository(MonitorEntity)
-    private repository: Repository<MonitorEntity>,
+    private repository: Repository<MonitorEntity>
   ) {}
 
   findAll(options?: FindManyOptions<MonitorEntity>) {

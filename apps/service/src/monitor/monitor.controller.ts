@@ -1,13 +1,23 @@
 import { Controller, Get, Param } from '@nestjs/common'
 import { MonitorService } from './monitor.service'
 import { ResultService } from '../result/result.service'
+import { MonitorEntity } from './model/monitor.entity'
 
 @Controller('monitor')
 export class MonitorController {
   constructor(
     private monitorService: MonitorService,
-    private resultService: ResultService,
+    private resultService: ResultService
   ) {}
+
+  @Get()
+  async getMonitors() {
+    const monitors = await this.monitorService.findAll()
+
+    return Promise.all(
+      monitors.map(async (m) => await this.mapToMonitorWithStatus(m))
+    )
+  }
 
   @Get(':id')
   async getMonitor(@Param('id') id: string) {
@@ -17,12 +27,7 @@ export class MonitorController {
       }
     })
 
-    const lastResult = await this.resultService.findLastResultFor(monitor.id)
-
-    return {
-      ...monitor,
-      status: lastResult.status
-    }
+    return this.mapToMonitorWithStatus(monitor)
   }
 
   @Get(':id/metrics')
@@ -33,5 +38,13 @@ export class MonitorController {
       status: r.status,
       metrics: r.metrics
     }))
+  }
+
+  async mapToMonitorWithStatus(monitor: MonitorEntity) {
+    const lastResult = await this.resultService.findLastResultFor(monitor.id)
+    return {
+      ...monitor,
+      status: lastResult.status
+    }
   }
 }
