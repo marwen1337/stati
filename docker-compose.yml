@@ -7,13 +7,22 @@ services:
       - db:/app/data
     environment:
       - MODE=service
+      - CORS_ORIGIN=<your ui url>
+      # Optional Status Notifications
+      - NOTIFICATIONS_PUSHOVER_ENABLED=false
+      - NOTIFICATIONS_PUSHOVER_TOKEN=<your pushover app key>
+      - NOTIFICATIONS_PUSHOVER_USER=<your pushover user key>
   agent:
     image: ghcr.io/marwen1337/stati
     environment:
       - MODE=agent
-      - AGENT_ACCESSKEY=undefined
+      - AGENT_ACCESSKEY=<your agent accesskey>
       - AGENT_SERVER_HOST=host.docker.internal
       - AGENT_SERVER_PORT=8080
+  ui:
+    image: ghcr.io/marwen1337/stati-ui
+    environment:
+      - NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 
 volumes:
   db:
