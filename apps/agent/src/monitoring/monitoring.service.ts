@@ -17,12 +17,9 @@ const availableMonitors: Record<MonitorType, BaseMonitor> = {
 
 @Injectable()
 export class MonitoringService {
-  runMonitor(
-    type: MonitorType,
-    dataIn: any
-  ): Promise<MonitorResult> | MonitorResult {
+  async runMonitor(type: MonitorType, dataIn: any): Promise<MonitorResult> {
     try {
-      return availableMonitors[type].run(dataIn)
+      return await availableMonitors[type].run(dataIn)
     } catch (e) {
       return {
         status: MonitorStatus.DOWN,
