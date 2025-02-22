@@ -1,10 +1,10 @@
-FROM node:22-alpine AS build
+FROM node:22 AS build
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --only=production
 
 COPY . .
 
@@ -16,8 +16,6 @@ WORKDIR /app
 
 COPY --from=build /app/dist /app/dist
 COPY --from=build /app/package*.json /app/
-
-RUN npm install --only=production
 
 ENV PORT=8080
 
