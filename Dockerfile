@@ -10,13 +10,6 @@ COPY . .
 
 RUN npm run build:service && npm run build:agent
 
-FROM node:22-alpine AS runtime
-
-WORKDIR /app
-
-COPY --from=build /app/dist /app/dist
-COPY --from=build /app/package*.json /app/
-
 ENV PORT=8080
 
 EXPOSE ${PORT}
