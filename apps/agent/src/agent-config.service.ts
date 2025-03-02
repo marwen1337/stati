@@ -3,16 +3,14 @@ import { ConfigService } from '@app/config'
 interface AgentConfig {
   accesskey: string | undefined;
   server: {
-    host: string;
-    port: number;
+    url: string;
   };
 }
 
 const defaultAgentConfig: AgentConfig = {
   accesskey: undefined,
   server: {
-    host: 'localhost',
-    port: 8080
+    url: 'http://localhost:8080'
   }
 }
 
