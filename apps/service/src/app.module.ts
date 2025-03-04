@@ -18,7 +18,7 @@ import * as process from 'node:process'
     TypeOrmModule.forRoot({
       ...SqliteDatasourceOptions,
       autoLoadEntities: true,
-      synchronize: process.env.NODE_ENV === 'development',
+      synchronize: process.env.NODE_ENV !== 'production',
       migrationsRun: true
     }),
     ScheduleModule.forRoot(),

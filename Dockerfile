@@ -11,6 +11,7 @@ COPY . .
 RUN npm run build:service && npm run build:agent
 
 ENV PORT=8080
+ENV NODE_ENV=production
 
 EXPOSE ${PORT}
 
