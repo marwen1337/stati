@@ -40,7 +40,7 @@ erDiagram
         STRING AgentId
         DATETIME CreatedAt
         DATETIME UpdatedAt
-        INT IntervalSeconds
+        VARCHAR CronSchedule
     }
     Result {
         STRING Id

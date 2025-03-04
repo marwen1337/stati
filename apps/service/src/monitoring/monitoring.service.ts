@@ -8,6 +8,7 @@ import { MonitorResult } from '@app/shared/model/monitor-result.type'
 import { MonitorStatus } from '@app/shared/model/monitor-status.enum'
 import { ResultEntity } from '../result/model/result.entity'
 import { NotificationService } from '../notification/notification.service'
+import { CronJob } from 'cron'
 
 @Injectable()
 export class MonitoringService {
@@ -27,8 +28,10 @@ export class MonitoringService {
 
   loadMonitor(monitor: MonitorEntity) {
     const callback = () => this.runMonitor(monitor)
-    const interval = setInterval(callback, monitor.intervalSeconds * 1000)
-    this.schedulerRegistry.addInterval(this.getCronjobName(monitor), interval)
+    const job = new CronJob(monitor.cronSchedule, callback)
+    // @ts-expect-error Cronjob type not correctly detected
+    this.schedulerRegistry.addCronJob(this.getCronjobName(monitor), job)
+    job.start()
     this.logger.debug(`Added monitor ${monitor}`)
     callback()
   }

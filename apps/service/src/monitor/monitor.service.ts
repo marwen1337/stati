@@ -30,7 +30,7 @@ export class MonitorService {
 
     const monitor = this.repository.create({
       name: data.name,
-      intervalSeconds: data.intervalSeconds,
+      cronSchedule: data.cronSchedule,
       type: data.type,
       configuration: JSON.parse(data.configuration),
       agent

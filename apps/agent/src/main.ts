@@ -16,7 +16,7 @@ async function bootstrap() {
   const server = `${url.protocol}//${url.host}`
   const socket = io(server, {
     auth: { accessKey: config.get('accesskey') },
-    path: `${url.pathname}/socket.io`
+    path: `${url.pathname}/socket.io`.replace('//', '/')
   })
 
   socket.on('connect', () => {

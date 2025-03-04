@@ -1,5 +1,6 @@
-import { Length, Max, MaxLength, Min, MinLength } from 'class-validator'
+import { Length, MaxLength, MinLength } from 'class-validator'
 import { MonitorType } from '../model/monitorType.enum'
+import { IsCronExpression } from '@app/shared/validator/is-cron-expression.decorator'
 
 export class CreateMonitorDto {
   @MinLength(3)
@@ -15,7 +16,6 @@ export class CreateMonitorDto {
   @Length(36)
   agentId: string
 
-  @Min(5)
-  @Max(86400)
-  intervalSeconds: number
+  @IsCronExpression()
+  cronSchedule: string
 }

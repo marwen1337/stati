@@ -22,33 +22,33 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(client: Socket) {
     if (!client.handshake.auth.accessKey) {
       this.logger.log(
-        `New connection from ${client.conn.remoteAddress} closed: no accessKey provided`,
+        `New connection from ${client.conn.remoteAddress} closed: no accessKey provided`
       )
       client.disconnect()
       return
     }
     const agentEntity = await this.agentService.findByAccessKey(
-      client.handshake.auth.accessKey,
+      client.handshake.auth.accessKey
     )
     if (!agentEntity) {
       this.logger.log(
-        `New connection from ${client.conn.remoteAddress} closed: invalid accessKey`,
+        `New connection from ${client.conn.remoteAddress} closed: invalid accessKey`
       )
       client.disconnect()
       return null
     }
     this.logger.log(
-      `Agent ${agentEntity} from ${client.conn.remoteAddress} authenticated`,
+      `Agent ${agentEntity} from ${client.conn.remoteAddress} authenticated`
     )
     this.connectedAgents.set(agentEntity.id, client)
   }
 
   handleDisconnect(client: Socket): any {
     const [id] = [...this.connectedAgents.entries()].find(
-      ([, value]) => value === client,
+      ([, value]) => value === client
     )
     this.logger.log(
-      `Connection closed with agent ${id} from ${client.conn.remoteAddress}`,
+      `Connection closed with agent ${id} from ${client.conn.remoteAddress}`
     )
     this.connectedAgents.delete(id)
   }
@@ -56,7 +56,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
   sendMessage(agentId: string, type: MessageType, content: object) {
     if (!this.isConnected(agentId)) {
       this.logger.warn(
-        `Trying to send message: Agent ${agentId} is not connected`,
+        `Trying to send message: Agent ${agentId} is not connected`
       )
       return
     }
@@ -67,11 +67,11 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
   sendMessageWithAck<T = any>(
     agentId: string,
     type: MessageType,
-    content: object,
+    content: object
   ): Promise<T> | null {
     if (!this.isConnected(agentId)) {
       this.logger.warn(
-        `Trying to send message: Agent ${agentId} is not connected`,
+        `Trying to send message: Agent ${agentId} is not connected`
       )
       return null
     }
