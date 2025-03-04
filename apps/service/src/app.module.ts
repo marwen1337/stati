@@ -10,15 +10,16 @@ import { UtilityModule } from './utility/utility.module'
 import { MonitoringModule } from './monitoring/monitoring.module'
 import { ScheduleModule } from '@nestjs/schedule'
 import { NotificationModule } from './notification/notification.module'
+import { SqliteDatasourceOptions } from './app.datasource'
+import * as process from 'node:process'
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: './data/database.sqlite',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      ...SqliteDatasourceOptions,
       autoLoadEntities: true,
-      synchronize: true
+      synchronize: process.env.NODE_ENV === 'development',
+      migrationsRun: true
     }),
     ScheduleModule.forRoot(),
     ConfigModule,

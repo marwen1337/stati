@@ -19,8 +19,8 @@ export class MonitorEntity {
   @Column()
   name: string
 
-  @Column()
-  intervalSeconds: number
+  @Column({ default: '0 * * * * *' })
+  cronSchedule: string
 
   @Column({ type: 'simple-enum', enum: MonitorType })
   type: MonitorType
