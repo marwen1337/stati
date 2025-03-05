@@ -35,7 +35,7 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
         `New connection from ${client.conn.remoteAddress} closed: invalid accessKey`
       )
       client.disconnect()
-      return null
+      return
     }
     this.logger.log(
       `Agent ${agentEntity} from ${client.conn.remoteAddress} authenticated`
@@ -44,9 +44,13 @@ export class AgentGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket): any {
-    const [id] = [...this.connectedAgents.entries()].find(
+    const entry = [...this.connectedAgents.entries()].find(
       ([, value]) => value === client
     )
+    if (!entry) {
+      return
+    }
+    const id = entry[0]
     this.logger.log(
       `Connection closed with agent ${id} from ${client.conn.remoteAddress}`
     )
