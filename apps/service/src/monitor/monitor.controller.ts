@@ -52,7 +52,6 @@ export class MonitorController {
       ? new Date(parseInt(from))
       : new Date(Date.now() - 3600 * 1000)
     const toDate = to ? new Date(parseInt(to)) : new Date()
-    console.log(typeof from)
 
     let results = await this.resultService.findForMonitor(id, fromDate, toDate)
 
