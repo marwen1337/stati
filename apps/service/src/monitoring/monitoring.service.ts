@@ -38,9 +38,9 @@ export class MonitoringService {
 
   unloadMonitor(monitor: MonitorEntity) {
     if (
-      this.schedulerRegistry.doesExist('interval', this.getCronjobName(monitor))
+      this.schedulerRegistry.doesExist('cron', this.getCronjobName(monitor))
     ) {
-      this.schedulerRegistry.deleteInterval(this.getCronjobName(monitor))
+      this.schedulerRegistry.deleteCronJob(this.getCronjobName(monitor))
       this.logger.debug(`Removed monitor ${monitor}`)
     }
   }
