@@ -48,8 +48,11 @@ export class MonitorController {
     @Query('to') to: string,
     @Query('amount') amount: number
   ) {
-    const fromDate = from ? new Date(from) : new Date(Date.now() - 3600 * 1000)
-    const toDate = to ? new Date(to) : new Date()
+    const fromDate = from
+      ? new Date(parseInt(from))
+      : new Date(Date.now() - 3600 * 1000)
+    const toDate = to ? new Date(parseInt(to)) : new Date()
+    console.log(typeof from)
 
     let results = await this.resultService.findForMonitor(id, fromDate, toDate)
 
