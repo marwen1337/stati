@@ -44,11 +44,19 @@ export class MonitorController {
   @Get(':id/metrics')
   async getMonitorMetrics(
     @Param('id') id: string,
-    @Query('limit') limit: number = 100
+    @Query('from') from: string,
+    @Query('to') to: string,
+    @Query('amount') amount: number
   ) {
-    const results = await this.resultService.findForMonitor(id, {
-      take: limit
-    })
+    const fromDate = from ? new Date(from) : new Date(Date.now() - 3600 * 1000)
+    const toDate = to ? new Date(to) : new Date()
+
+    let results = await this.resultService.findForMonitor(id, fromDate, toDate)
+
+    if (amount) {
+      results = this.resizeArray(results, amount)
+    }
+
     return results.map((r) => ({
       timestamp: r.createdAt,
       status: r.status,
@@ -82,5 +90,12 @@ export class MonitorController {
       ...monitor,
       status: lastResult.status
     }
+  }
+
+  private resizeArray<T>(arr: T[], newLength: number) {
+    return Array.from({ length: newLength }, (_, i) => {
+      const index = Math.round((i * (arr.length - 1)) / (newLength - 1))
+      return { ...arr[index] } // Neue Kopie des Objekts
+    })
   }
 }
