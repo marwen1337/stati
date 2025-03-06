@@ -49,7 +49,7 @@ export class ResultService {
         createdAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate))
       },
       order: {
-        createdAt: 'DESC'
+        createdAt: 'ASC'
       }
     })
   }
