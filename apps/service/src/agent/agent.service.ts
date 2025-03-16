@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UseFilters } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { AgentEntity } from './model/agent.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { HashService } from '../utility/hash.service'
 import { CreateAgentDto } from './dto/create-agent.dto'
+import { AgentStillHasMonitorsException } from './exception/agent-still-has-monitors.exception'
 
 @Injectable()
+@UseFilters(AgentStillHasMonitorsException)
 export class AgentService {
   constructor(
     @InjectRepository(AgentEntity) private repository: Repository<AgentEntity>,
-    private hashService: HashService,
+    private hashService: HashService
   ) {}
 
   findAll() {
@@ -28,7 +30,7 @@ export class AgentService {
   }
 
   async create(
-    data: CreateAgentDto,
+    data: CreateAgentDto
   ): Promise<AgentEntity & { accessKey: string }> {
     const agentEntity = this.repository.create(data)
     const accessKey = this.generateRandomString(32)
@@ -41,8 +43,12 @@ export class AgentService {
     }
   }
 
-  deleteAgent(agent: AgentEntity) {
-    return this.repository.remove(agent)
+  async deleteAgent(agent: AgentEntity) {
+    try {
+      return await this.repository.remove(agent)
+    } catch (e) {
+      throw new AgentStillHasMonitorsException()
+    }
   }
 
   private generateRandomString(length: number): string {
