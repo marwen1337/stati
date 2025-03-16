@@ -22,8 +22,12 @@ export class MonitorController {
   ) {}
 
   @Get()
-  async getMonitors() {
-    const monitors = await this.monitorService.findAll()
+  async getMonitors(@Query('agent') withAgent: string) {
+    const monitors = await this.monitorService.findAll({
+      relations: {
+        agent: !!withAgent
+      }
+    })
 
     return Promise.all(
       monitors.map(async (m) => await this.mapToMonitorWithStatus(m))
@@ -31,10 +35,13 @@ export class MonitorController {
   }
 
   @Get(':id')
-  async getMonitor(@Param('id') id: string) {
+  async getMonitor(@Param('id') id: string, @Query('agent') withAgent: string) {
     const monitor = await this.monitorService.findOne({
       where: {
         id
+      },
+      relations: {
+        agent: !!withAgent
       }
     })
 
